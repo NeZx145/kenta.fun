@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - KENTA</title>
+    <link rel="stylesheet" href="public/css/style.css">
+    <link rel="stylesheet" href="public/css/style-additional.css">
+    <script src="public/js/security.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #1a1a1a;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: #dcddde;
+        }
+
+        .user-dashboard {
+            display: flex;
+            min-height: 100vh;
+            padding: 0;
+            background: #1a1a1a;
+        }
+
+        /* Discord-like Sidebar */
+        .dashboard-sidebar {
+            width: 240px;
+            background: #2f3136;
+            border-right: 1px solid #202225;
+            padding: 0;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar-header {
+            padding: 20px 16px;
+            border-bottom: 1px solid #202225;
+            background: #2f3136;
+        }
+
+        .sidebar-header h2 {
+            color: #fff;
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar-search {
+            padding: 10px 16px;
+            border-bottom: 1px solid #202225;
+        }
+
+        .sidebar-search input {
+            width: 100%;
+            padding: 8px 12px;
+            background: #202225;
+            border: none;
+            border-radius: 4px;
+            color: #dcddde;
+            font-size: 14px;
+        }
+
+        .sidebar-search input::placeholder {
+            color: #72767d;
+        }
+
+        .sidebar-search input:focus {
+            outline: none;
+            background: #1a1a1a;
+        }
+
+        .settings-category {
+            padding: 8px 0;
+        }
+
+        .settings-category-title {
+            padding: 8px 16px;
+            color: #8e9297;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dashboard-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .dashboard-menu li {
+            margin: 0;
+        }
+
+        .dashboard-menu a {
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            color: #b9bbbe;
+            text-decoration: none;
+            transition: all 0.15s ease;
+            font-size: 16px;
+            border-radius: 4px;
+            margin: 2px 8px;
+        }
+
+        .dashboard-menu a:hover {
+            background: #393c43;
+            color: #fff;
+        }
+
+        .dashboard-menu a.menu-active {
+            background: #393c43;
+            color: #b10000;
+            font-weight: 500;
+        }
+
+        .dashboard-menu a.menu-active {
+            position: relative;
+        }
+
+        .dashboard-menu a.menu-active::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            width: 3px;
+            height: 20px;
+            background: #b10000;
+            border-radius: 0 2px 2px 0;
+        }
+
+        /* Main Content Area */
+        .dashboard-container {
+            margin-left: 240px;
+            flex: 1;
+            background: #36393f;
+            min-height: 100vh;
+        }
+
+        .dashboard-content-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        .content-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #40444b;
+        }
+
+        .content-header h1 {
+            color: #fff;
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0 0 8px 0;
+        }
+
+        .content-header p {
+            color: #b9bbbe;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .dashboard-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .dashboard-section.active {
+            display: block;
+        }
+
+        .dashboard-section h2 {
+            color: #fff;
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0 0 8px 0;
+        }
+
+        .dashboard-section > p {
+            color: #b9bbbe;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        .submit-form {
+            max-width: 100%;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #b9bbbe;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            background: #2f3136;
+            border: 1px solid #202225;
+            border-radius: 4px;
+            color: #dcddde;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #b10000;
+            background: #36393f;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #72767d;
+        }
+
+        .form-button {
+            background: #b10000;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .form-button:hover {
+            background: #e60000;
+        }
+
+        .form-button:active {
+            transform: translateY(1px);
+        }
+
+        .logout-btn {
+            background: transparent;
+            color: #b9bbbe;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            margin-top: 16px;
+            width: 100%;
+            text-align: left;
+        }
+
+        .logout-btn:hover {
+            background: #393c43;
+            color: #fff;
+        }
+
+        .submissions-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        .profile-info {
+            background: #2f3136;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #202225;
+        }
+
+        .profile-info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #40444b;
+        }
+
+        .profile-info-item:last-child {
+            border-bottom: none;
+        }
+
+        .profile-info-label {
+            color: #b9bbbe;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .profile-info-value {
+            color: #fff;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-divider {
+            height: 1px;
+            background: #40444b;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-sidebar {
+                width: 200px;
+            }
+
+            .dashboard-container {
+                margin-left: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+            }
+
+            .dashboard-container {
+                margin-left: 0;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script src="public/js/app.js"></script>
+</head>
+<body>
+    <!-- User Dashboard -->
+    <div id="userDashboard" class="user-dashboard">
+        <!-- Discord-like Sidebar -->
+        <div class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <h2 data-en="User Settings" data-ar="إعدادات المستخدم" data-tr="Kullanıcı Ayarları">User Settings</h2>
+            </div>
+            
+            <div class="sidebar-search">
+                <input type="text" placeholder="Search" id="settingsSearch">
+            </div>
+
+            <div class="settings-category">
+                <div class="settings-category-title" data-en="My Account" data-ar="حسابي" data-tr="Hesabım">My Account</div>
+                <ul class="dashboard-menu">
+                    <li><a href="#" onclick="showDashboardSection('profile'); return false;" data-en="Profile" data-ar="الملف الشخصي" data-tr="Profil">Profile</a></li>
+                </ul>
+            </div>
+
+            <div class="settings-category">
+                <div class="settings-category-title" data-en="Products" data-ar="المنتجات" data-tr="Ürünler">Products</div>
+                <ul class="dashboard-menu">
+                    <li><a href="#" onclick="showDashboardSection('submissions'); return false;" class="menu-active" data-en="Submit Product" data-ar="تقديم منتج" data-tr="Ürün Gönder">Submit Product</a></li>
+                    <li><a href="#" onclick="showDashboardSection('my-submissions'); return false;" data-en="My Products" data-ar="منتجاتي" data-tr="Ürünlerim">My Products</a></li>
+                </ul>
+            </div>
+
+            <div class="settings-category">
+                <button class="logout-btn" onclick="logoutUser()" data-en="Logout" data-ar="تسجيل الخروج" data-tr="Çıkış Yap">Logout</button>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="dashboard-container">
+            <div class="dashboard-content-wrapper">
+                <!-- Submit Website Section -->
+                <div id="submissions-section" class="dashboard-section active">
+                    <div class="content-header">
+                        <h1 id="submitFormTitle" data-en="Submit Your Product" data-ar="قدم منتجك" data-tr="Ürününüzü Gönderin">Submit Your Product</h1>
+                        <p id="submitFormDesc" data-en="Submit your product with all details" data-ar="قدم منتجك مع جميع التفاصيل" data-tr="Ürününüzü tüm detaylarla gönderin">Submit your product with all details</p>
+                    </div>
+                    <form id="submitWebsiteForm" onsubmit="handleSubmitWebsite(event)" class="submit-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label data-en="Product Name:" data-ar="اسم المنتج:" data-tr="Ürün Adı:">Product Name:</label>
+                                <input type="text" id="websiteName" required placeholder="Enter product name">
+                            </div>
+                            <div class="form-group">
+                                <label data-en="Category:" data-ar="الفئة:" data-tr="Kategori:">Category:</label>
+                                <select id="websiteCategory" required onchange="updateSubcategories()">
+                                    <option value="">Select category</option>
+                                    <option value="tweaks" data-en="Tweaks" data-ar="التويكات" data-tr="Tweaklar">Tweaks</option>
+                                    <option value="spoofers" data-en="Spoofers" data-ar="السبوفرات" data-tr="Spooferlar">Spoofers</option>
+                                    <option value="cheats" data-en="Game Cheats" data-ar="غش الألعاب" data-tr="Oyun Hileleri">Game Cheats</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label data-en="Subcategory:" data-ar="الفئة الفرعية:" data-tr="Alt Kategori:">Subcategory:</label>
+                                <select id="productSubcategory" required>
+                                    <option value="">Select subcategory</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label data-en="Product Type:" data-ar="نوع المنتج:" data-tr="Ürün Tipi:">Product Type:</label>
+                                <input type="text" id="productType" placeholder="e.g., External, Internal">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label data-en="Game (if applicable):" data-ar="اللعبة (إن وجدت):" data-tr="Oyun (varsa):">Game:</label>
+                                <input type="text" id="productGame" placeholder="e.g., Fortnite, Valorant">
+                            </div>
+                            <div class="form-group">
+                                <label data-en="Protection:" data-ar="الحماية:" data-tr="Koruma:">Protection:</label>
+                                <input type="text" id="productProtection" placeholder="e.g., EAC, BattlEye">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label data-en="Store:" data-ar="المتجر:" data-tr="Mağaza:">Store:</label>
+                                <input type="text" id="productStore" placeholder="Store name or URL">
+                            </div>
+                            <div class="form-group">
+                                <label data-en="Detection Status:" data-ar="حالة الكشف:" data-tr="Tespit Durumu:">Detection Status:</label>
+                                <select id="productDetectionStatus" required>
+                                    <option value="testing" data-en="Testing" data-ar="قيد الاختبار" data-tr="Test Ediliyor">Testing</option>
+                                    <option value="undiscovered" data-en="Undiscovered" data-ar="غير مكتشف" data-tr="Keşfedilmemiş">Undiscovered</option>
+                                    <option value="discovered" data-en="Discovered" data-ar="مكتشف" data-tr="Keşfedildi">Discovered</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label data-en="Date From:" data-ar="من تاريخ:" data-tr="Başlangıç Tarihi:">Date From:</label>
+                                <input type="date" id="dateFrom">
+                            </div>
+                            <div class="form-group">
+                                <label data-en="Date To:" data-ar="إلى تاريخ:" data-tr="Bitiş Tarihi:">Date To:</label>
+                                <input type="date" id="dateTo">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label data-en="Rating (0-10):" data-ar="التقييم (0-10):" data-tr="Değerlendirme (0-10):">Rating:</label>
+                            <input type="number" id="productRating" min="0" max="10" step="0.1" placeholder="8.5">
+                        </div>
+
+                        <div class="form-group">
+                            <label data-en="Description:" data-ar="الوصف:" data-tr="Açıklama:">Description:</label>
+                            <textarea id="websiteDescription" required placeholder="Describe your product in detail..." rows="5"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label data-en="Custom Pricing (Duration:Price):" data-ar="الأسعار المخصصة (المدة:السعر):" data-tr="Özel Fiyatlandırma (Süre:Fiyat):">Custom Pricing:</label>
+                            <div id="pricingContainer">
+                                <div class="pricing-item">
+                                    <input type="text" class="pricing-duration" placeholder="e.g., 1 Day, 1 Week, 1 Month">
+                                    <input type="text" class="pricing-price" placeholder="e.g., $10, $25, $50">
+                                    <button type="button" class="remove-pricing-btn" onclick="removePricingItem(this)">×</button>
+                                </div>
+                            </div>
+                            <button type="button" class="add-pricing-btn" onclick="addPricingItem()" data-en="Add Pricing" data-ar="إضافة سعر" data-tr="Fiyat Ekle">+ Add Pricing</button>
+                        </div>
+
+                        <button type="submit" class="form-button" data-en="Submit Product" data-ar="تقديم المنتج" data-tr="Ürünü Gönder">Submit Product</button>
+                        <div id="submitWebsiteMsg" class="form-msg" aria-live="polite" style="margin-top:12px"></div>
+                    </form>
+                </div>
+
+                <!-- My Submissions Section -->
+                <div id="my-submissions-section" class="dashboard-section">
+                    <div class="content-header">
+                        <h1 data-en="My Products" data-ar="منتجاتي" data-tr="Ürünlerim">My Products</h1>
+                        <p data-en="Manage your submitted products" data-ar="إدارة المنتجات المقدمة" data-tr="Gönderdiğiniz ürünleri yönetin">Manage your submitted products</p>
+                    </div>
+                    <div id="userSubmissionsList" class="submissions-list">
+                        <!-- User submissions will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Profile Section -->
+                <div id="profile-section" class="dashboard-section">
+                    <div class="content-header">
+                        <h1 data-en="My Profile" data-ar="ملفي الشخصي" data-tr="Profilim">My Profile</h1>
+                        <p data-en="View and manage your account information" data-ar="عرض وإدارة معلومات حسابك" data-tr="Hesap bilgilerinizi görüntüleyin ve yönetin">View and manage your account information</p>
+                    </div>
+                    <div id="userProfileInfo" class="profile-info">
+                        <!-- Profile info will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                updateNavbar();
+                loadUserProfile();
+                const urlParams = new URLSearchParams(window.location.search);
+                const section = urlParams.get('section');
+                if (section) {
+                    showDashboardSection(section);
+                } else {
+                    showDashboardSection('submissions');
+                }
+            } else {
+                // Redirect to login if not logged in
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>
+

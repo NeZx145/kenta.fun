@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - KENTA</title>
+    <link rel="stylesheet" href="public/css/style.css">
+    <link rel="stylesheet" href="public/css/style-additional.css">
+    <script src="public/js/security.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            min-height: 100vh;
+        }
+        .product-page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .back-to-home {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: #b10000;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .back-to-home:hover {
+            color: #e60000;
+            transform: translateX(-5px);
+        }
+    </style>
+    <script src="public/js/app.js"></script>
+</head>
+<body>
+    <div class="product-page-container">
+        <a href="index.html" class="back-to-home" data-en="← Back to Home" data-ar="← العودة للرئيسية" data-tr="← Ana Sayfaya Dön">← Back to Home</a>
+        <div id="productDetails" class="product-details">
+            <!-- Product details will be loaded here -->
+        </div>
+    </div>
+
+    <script>
+        // Get product ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+        
+        window.addEventListener('load', function() {
+            const savedLanguage = localStorage.getItem('language') || 'en';
+            setLanguage(savedLanguage);
+            
+            if (productId) {
+                loadProductPage(productId);
+            } else {
+                document.getElementById('productDetails').innerHTML = '<p style="color: #ff6666; text-align: center; padding: 40px;">Product not found</p>';
+            }
+        });
+        
+        async function loadProductPage(productId) {
+            try {
+                const response = await fetch(`${API_BASE}/products/${productId}`);
+                const product = await response.json();
+                
+                const statusColors = {
+                    testing: '#ffaa00',
+                    undiscovered: '#00ff88',
+                    discovered: '#ff5555'
+                };
+                const statusColor = statusColors[product.detectionStatus] || '#ffaa00';
+                
+                const details = document.getElementById('productDetails');
+                details.innerHTML = `
+                    <div class="product-card">
+                        <div class="product-header-info">
+                            <div>
+                                <h1 class="product-title">${product.name}</h1>
+                                ${product.rating > 0 ? `<div class="product-rating"><span class="rating-stars">⭐ ${product.rating}/10</span></div>` : ''}
+                            </div>
+                            <div class="detection-status" style="background: ${statusColor};">
+                                ${product.detectionStatus}
+                            </div>
+                        </div>
+                        
+                        <div class="product-meta">
+                            <div class="meta-item">
+                                <div class="meta-label">CATEGORY</div>
+                                <div class="meta-value">${product.category}</div>
+                            </div>
+                            ${product.subcategory ? `
+                            <div class="meta-item">
+                                <div class="meta-label">SUBCATEGORY</div>
+                                <div class="meta-value">${product.subcategory}</div>
+                            </div>
+                            ` : ''}
+                            ${product.game ? `
+                            <div class="meta-item">
+                                <div class="meta-label">GAME</div>
+                                <div class="meta-value">${product.game}</div>
+                            </div>
+                            ` : ''}
+                            ${product.protection ? `
+                            <div class="meta-item">
+                                <div class="meta-label">PROTECTION</div>
+                                <div class="meta-value">${product.protection}</div>
+                            </div>
+                            ` : ''}
+                            ${product.store ? `
+                            <div class="meta-item" style="border: 2px solid #b10000;">
+                                <div class="meta-label">STORE</div>
+                                <div class="meta-value" style="color: #b10000; font-size: 20px;">🏪 ${product.store}</div>
+                            </div>
+                            ` : ''}
+                        </div>
+                        
+                        ${product.description ? `
+                        <div class="product-description">
+                            <strong>Description:</strong><br><br>
+                            ${product.description}
+                        </div>
+                        ` : ''}
+                        
+                        ${product.pricing && product.pricing.length > 0 ? `
+                        <div>
+                            <strong style="color: #b10000; display: block; margin-bottom: 10px; font-size: 18px;">PRICING:</strong>
+                            <div class="product-prices">
+                                ${product.pricing.map(p => `<div class="price-item">${p.duration}<br><strong>${p.price}</strong></div>`).join('')}
+                            </div>
+                        </div>
+                        ` : ''}
+                        
+                        ${product.dateFrom && product.dateTo ? `
+                        <div style="margin-top: 20px; padding: 15px; background: rgba(177, 0, 0, 0.1); border-radius: 8px; border-left: 4px solid #b10000;">
+                            <strong style="color: #b10000;">Valid Period:</strong>
+                            <p style="color: #ccc; margin-top: 5px;">From: ${product.dateFrom} To: ${product.dateTo}</p>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading product:', error);
+                document.getElementById('productDetails').innerHTML = '<p style="color: #ff6666; text-align: center; padding: 40px;">Error loading product. Make sure server is running.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
+

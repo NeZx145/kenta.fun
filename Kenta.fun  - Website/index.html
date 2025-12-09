@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KENTA Hub</title>
+    <link rel="stylesheet" href="public/css/style.css">
+    <link rel="stylesheet" href="public/css/style-additional.css">
+    <script src="public/js/security.js"></script>
+    <script src="public/js/app.js"></script>
+</head>
+<body>
+
+<!-- Language Selector -->
+<div class="language-selector">
+    <button onclick="setLanguage('en')" class="lang-btn active" id="lang-en">English</button>
+    <button onclick="setLanguage('ar')" class="lang-btn" id="lang-ar">العربية</button>
+    <button onclick="setLanguage('tr')" class="lang-btn" id="lang-tr">Türkçe</button>
+</div>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <img src="public/images/kenta-logo.png" class="nav-logo">        
+            <div class="nav-menu">
+            <div class="dropdown">
+                <button class="dropdown-btn" data-en="Optimize PC" data-ar="تحسين الحاسوب" data-tr="Optimize PC">Optimize PC</button>
+                <div class="dropdown-content">
+                    <a href="#" onclick="showCategory('tweaks', 'optimize');" data-en="Optimize PC" data-ar="تحسين الحاسوب" data-tr="Optimize PC">Optimize PC</a>
+                </div>
+            </div>
+            
+            <div class="dropdown">
+                <button class="dropdown-btn" data-en="Spoofers" data-ar="السبوفرات" data-tr="Spooferlar">Spoofers</button>
+                <div class="dropdown-content">
+                    <a href="#" onclick="showCategory('spoofers', 'permanent');" data-en="Permanent" data-ar="دائمة" data-tr="Kalıcı">Permanent</a>
+                    <a href="#" onclick="showCategory('spoofers', 'temporary');" data-en="Temporary" data-ar="مؤقتة" data-tr="Geçici">Temporary</a>
+                </div>
+            </div>
+            
+            <div class="dropdown">
+                <button class="dropdown-btn" data-en="Game Cheats" data-ar="غش الألعاب" data-tr="Oyun Hileleri">Game Cheats</button>
+                <div class="dropdown-content">
+                    <a href="#" onclick="showCategory('cheats', 'external');" data-en="External" data-ar="خارجية" data-tr="Harici">External</a>
+                    <a href="#" onclick="showCategory('cheats', 'internal');" data-en="Internal" data-ar="داخلية" data-tr="İç">Internal</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-buttons">
+            <div class="dropdown">
+                <a href="admin.html" class="nav-btn admin-btn" data-en="Admin" data-ar="المسؤول" data-tr="Admin">Admin</a>
+            </div>
+            
+            <a href="user-dashboard.html" id="submitNowBtn" class="nav-btn" style="display:none; margin-right:10px; text-decoration: none;" data-en="Submit Your Store" data-ar="قدِّم متجرك" data-tr="Mağaza Gönder">Submit Your Store</a>
+            
+            <div class="dropdown" id="userDropdown" style="display: none;">
+                <button class="nav-btn" id="userNavBtn" style="display: none;"></button>
+                <div class="dropdown-content user-dropdown-content">
+                    <a href="user-dashboard.html" data-en="Dashboard" data-ar="لوحة التحكم" data-tr="Kontrol Paneli">Dashboard</a>
+                    <a href="#" onclick="logoutUser(); return false;" data-en="Logout" data-ar="تسجيل الخروج" data-tr="Çıkış Yap">Logout</a>
+                </div>
+            </div>
+            
+            <div class="dropdown" id="browseDropdown">
+                <button class="nav-btn" data-en="Browse" data-ar="تصفح" data-tr="Gözat">Browse</button>
+                <div class="dropdown-content">
+                    <a href="#" onclick="showCategory('tweaks', 'optimize'); return false;" data-en="Optimize PC" data-ar="تحسين الحاسوب" data-tr="Optimize PC">Optimize PC</a>
+                    <a href="#" onclick="showCategory('spoofers', 'permanent'); return false;" data-en="Permanent Spoofers" data-ar="السبوفرات الدائمة" data-tr="Kalıcı Spooferlar">Permanent Spoofers</a>
+                    <a href="#" onclick="showCategory('spoofers', 'temporary'); return false;" data-en="Temporary Spoofers" data-ar="السبوفرات المؤقتة" data-tr="Geçici Spooferlar">Temporary Spoofers</a>
+                    <a href="#" onclick="showCategory('cheats', 'external'); return false;" data-en="External Cheats" data-ar="الهاكات الخارجية" data-tr="Harici Hileler">External Cheats</a>
+                    <a href="#" onclick="showCategory('cheats', 'internal'); return false;" data-en="Internal Cheats" data-ar="الهاكات الداخلية" data-tr="İç Hileler">Internal Cheats</a>
+                </div>
+            </div>
+            
+            <button class="nav-btn" onclick="showLoginModal()" id="loginNavBtn" data-en="Login" data-ar="دخول" data-tr="Giriş">Login</button>
+            <button class="nav-btn register-btn" onclick="showRegisterModal()" id="registerNavBtn" data-en="Register" data-ar="تسجيل" data-tr="Kayıt Ol">Register</button>
+        </div>
+    </div>
+</nav>
+
+<header>
+    <img src="public/images/kenta-logo.png" class="logo">
+    <h1 data-en="KENTA" data-ar="KENTA" data-tr="KENTA">KENTA</h1>
+    <p data-en="Platform for Tweaks, Spoofers & Cheats" data-ar="منصة للتويك والسبوفرات والهاكات" data-tr="Tweaklar, Spooferlar ve Hileler için Platform">Platform for Tweaks, Spoofers & Cheats</p>
+</header>
+
+
+<!-- Home Section -->
+<div id="homeSection" class="home-section">
+    <div class="sections-container">
+        <div class="section-box" onclick="showCategory('tweaks', 'optimize')">
+            <h3 data-en="Optimize PC" data-ar="تحسين الحاسوب" data-tr="Optimize PC">Optimize PC</h3>
+        </div>
+
+        <div class="section-box" onclick="showCategory('spoofers', 'permanent')">
+            <h3 data-en="Spoofers" data-ar="السبوفرات" data-tr="Spooferlar">Spoofers</h3>
+        </div>
+
+        <div class="section-box" onclick="showCategory('cheats', 'external')">
+            <h3 data-en="Cheats" data-ar="الهاكات" data-tr="Hileler">Cheats</h3>
+        </div>
+    </div>
+
+    <!-- Top Stores Section -->
+    <div class="top-stores-section">
+        <h2 data-en="Top Stores" data-ar="أفضل المتاجر" data-tr="En İyi Mağazalar">Top Stores</h2>
+        <div class="stores-grid" id="topStoresGrid">
+            <!-- Top stores will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Best Products Section -->
+    <div class="best-products-section">
+        <h2 data-en="Best Products" data-ar="أفضل المنتجات" data-tr="En İyi Ürünler">Best Products</h2>
+        <div class="best-products-grid" id="bestProductsGrid">
+            <!-- Best products will be loaded here -->
+        </div>
+    </div>
+</div>
+
+<!-- Category Section -->
+<div id="categorySection" class="category-section" style="display: none;">
+    <button onclick="goHome()" class="back-button" data-en="← Back" data-ar="← رجوع" data-tr="← Geri">← Back</button>
+    <h2 id="categoryTitle"></h2>
+    <div id="categoriesGrid" class="categories-grid">
+        <!-- Categories will be loaded here -->
+    </div>
+</div>
+
+<!-- Product Details Section -->
+<div id="productSection" class="product-section" style="display: none;">
+    <button onclick="goBackCategory()" class="back-button" data-en="← Back" data-ar="← رجوع" data-tr="← Geri">← Back</button>
+    <div id="productDetails" class="product-details">
+        <!-- Product details will be loaded here -->
+    </div>
+</div>
+
+<!-- Login Modal -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeLoginModal()">&times;</span>
+        <h2 data-en="Login to KENTA" data-ar="دخول إلى KENTA" data-tr="KENTA'ya Giriş Yap">Login to KENTA</h2>
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label for="loginEmail" data-en="Email or Username:" data-ar="البريد الإلكتروني أو اسم المستخدم:" data-tr="E-posta veya Kullanıcı Adı:">Email or Username:</label>
+                <input type="text" id="loginEmail" required placeholder="your@email.com or username">
+            </div>
+            <div class="form-group">
+                <label for="loginPassword" data-en="Password:" data-ar="كلمة المرور:" data-tr="Şifre:">Password:</label>
+                <input type="password" id="loginPassword" required placeholder="••••••••">
+            </div>
+            <button type="submit" class="form-button" data-en="Login" data-ar="دخول" data-tr="Giriş Yap">Login</button>
+        </form>
+        <div id="loginMsg" class="form-msg" aria-live="polite"></div>
+        <p class="form-link"><span data-en="Don't have an account?" data-ar="ليس لديك حساب؟" data-tr="Hesabınız yok mu?">Don't have an account?</span> <a href="#" onclick="switchToRegister()" data-en="Register here" data-ar="سجل هنا" data-tr="Buraya kayıt olun">Register here</a></p>
+    </div>
+</div>
+
+<!-- Register Modal -->
+<div id="registerModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeRegisterModal()">&times;</span>
+        <h2 data-en="Create Account" data-ar="إنشاء حساب" data-tr="Hesap Oluştur">Create Account</h2>
+        <form id="registerForm" onsubmit="handleRegister(event)">
+            <div class="form-group">
+                <label for="registerUsername" data-en="Username:" data-ar="اسم المستخدم:" data-tr="Kullanıcı Adı:">Username:</label>
+                <input type="text" id="registerUsername" required placeholder="Choose a username">
+                <span class="validation-msg" id="usernameMsg"></span>
+            </div>
+            <div class="form-group">
+                <label for="registerEmail" data-en="Email:" data-ar="البريد الإلكتروني:" data-tr="E-posta:">Email:</label>
+                <input type="email" id="registerEmail" required placeholder="your@email.com">
+                <span class="validation-msg" id="emailMsg"></span>
+            </div>
+            <div class="form-group">
+                <label for="registerPassword" data-en="Password:" data-ar="كلمة المرور:" data-tr="Şifre:">Password:</label>
+                <input type="password" id="registerPassword" required placeholder="Minimum 6 characters">
+                <span class="validation-msg" id="passwordMsg"></span>
+            </div>
+            <div class="form-group">
+                <label for="registerConfirm" data-en="Confirm Password:" data-ar="تأكيد كلمة المرور:" data-tr="Şifreyi Onayla:">Confirm Password:</label>
+                <input type="password" id="registerConfirm" required placeholder="••••••••">
+            </div>
+            <div class="form-group checkbox">
+                <input type="checkbox" id="agreeTerms" required>
+                <label for="agreeTerms" data-en="I agree to Terms & Conditions" data-ar="أوافق على الشروط والأحكام" data-tr="Şartlar ve Koşulları Kabul Ediyorum">I agree to Terms & Conditions</label>
+            </div>
+            <button type="submit" class="form-button" data-en="Create Account" data-ar="إنشاء حساب" data-tr="Hesap Oluştur">Create Account</button>
+        </form>
+        <p class="form-link"><span data-en="Already have an account?" data-ar="هل لديك حساب بالفعل؟" data-tr="Zaten bir hesabınız var mı?">Already have an account?</span> <a href="#" onclick="switchToLogin()" data-en="Login here" data-ar="دخول هنا" data-tr="Buraya giriş yapın">Login here</a></p>
+    </div>
+</div>
+
+<!-- Admin Access Modal -->
+<div id="adminAccessModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeAdminAccessModal()">&times;</span>
+        <h2 data-en="Admin Access" data-ar="وصول المسؤول" data-tr="Yönetici Erişimi">Admin Access</h2>
+        <form onsubmit="handleAdminAccess(event)">
+            <div class="form-group">
+                <label for="adminAccessCode" data-en="Access Code:" data-ar="كود الوصول:" data-tr="Erişim Kodu:">Access Code:</label>
+                <input type="text" id="adminAccessCode" required placeholder="Enter 6-digit code" maxlength="6">
+            </div>
+            <button type="submit" class="form-button" data-en="Access Admin" data-ar="الوصول للمسؤول" data-tr="Yönetici Erişim">Access Admin</button>
+        </form>
+    </div>
+</div>
+
+<!-- User Dashboard removed - now in user-dashboard.html -->
+
+<!-- Admin Verification Modal -->
+<div id="adminVerificationModal" class="modal">
+    <div class="modal-content modal-small">
+        <span class="close" onclick="closeAdminVerificationModal()">&times;</span>
+        <h2 data-en="Admin Access" data-ar="الوصول الإداري" data-tr="Yönetici Erişimi">Admin Access</h2>
+        <p data-en="Enter the 6-digit verification code" data-ar="أدخل كود التحقق المكون من 6 أرقام" data-tr="6 haneli doğrulama kodunu girin">Enter the 6-digit verification code</p>
+        <form id="adminVerificationForm" onsubmit="handleAdminVerification(event)">
+            <div class="form-group">
+                <input type="text" id="adminCode" maxlength="6" placeholder="000000" required style="text-align: center; font-size: 24px; letter-spacing: 10px;">
+            </div>
+            <button type="submit" class="form-button" data-en="Verify" data-ar="تحقق" data-tr="Doğrula">Verify</button>
+        </form>
+    </div>
+</div>
+
+<!-- Admin Panel -->
+<div id="adminPanel" class="admin-panel">
+    <div class="admin-header">
+        <h1 data-en="Admin Control Panel" data-ar="لوحة تحكم المسؤول" data-tr="Yönetici Kontrol Paneli">Admin Control Panel</h1>
+        <button class="logout-btn" onclick="logoutAdmin()" data-en="Logout" data-ar="تسجيل الخروج" data-tr="Çıkış Yap">Logout</button>
+    </div>
+    
+    <div class="admin-container">
+        <div class="admin-sidebar">
+            <ul class="admin-menu">
+                <li><a href="#" onclick="showAdminSection('pending')" class="menu-active" data-en="Pending Submissions" data-ar="التقديمات المعلقة" data-tr="Beklemede Gönderiler">Pending Submissions</a></li>
+                <li><a href="#" onclick="showAdminSection('approved')" data-en="Approved" data-ar="الموافق عليها" data-tr="Onaylanan">Approved</a></li>
+                <li><a href="#" onclick="showAdminSection('rejected')" data-en="Rejected" data-ar="المرفوضة" data-tr="Reddedilen">Rejected</a></li>
+                <li><a href="#" onclick="showAdminSection('users')" data-en="Users" data-ar="المستخدمون" data-tr="Kullanıcılar">Users</a></li>
+                <li><a href="#" onclick="showAdminSection('stats')" data-en="Statistics" data-ar="الإحصائيات" data-tr="İstatistikler">Statistics</a></li>
+            </ul>
+        </div>
+
+        <div class="admin-content">
+            <!-- Pending Submissions -->
+            <div id="pending-section" class="admin-section active">
+                <h2 data-en="Pending Website Submissions" data-ar="التقديمات المعلقة" data-tr="Beklemede Web Sitesi Gönderileri">Pending Website Submissions</h2>
+                <div id="pendingSubmissionsList" class="submissions-grid">
+                    <!-- Pending submissions will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Approved Submissions -->
+            <div id="approved-section" class="admin-section">
+                <h2 data-en="Approved Products" data-ar="المنتجات الموافق عليها" data-tr="Onaylanan Ürünler">Approved Products</h2>
+                <div id="approvedSubmissionsList" class="submissions-grid">
+                    <!-- Approved submissions will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Rejected Submissions -->
+            <div id="rejected-section" class="admin-section">
+                <h2 data-en="Rejected Websites" data-ar="المواقع المرفوضة" data-tr="Reddedilen Web Siteleri">Rejected Websites</h2>
+                <div id="rejectedSubmissionsList" class="submissions-grid">
+                    <!-- Rejected submissions will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Users Management -->
+            <div id="users-section" class="admin-section">
+                <h2 data-en="Users Management" data-ar="إدارة المستخدمين" data-tr="Kullanıcı Yönetimi">Users Management</h2>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th data-en="Username" data-ar="اسم المستخدم" data-tr="Kullanıcı Adı">Username</th>
+                            <th data-en="Email" data-ar="البريد الإلكتروني" data-tr="E-posta">Email</th>
+                            <th data-en="Join Date" data-ar="تاريخ الانضمام" data-tr="Katılma Tarihi">Join Date</th>
+                            <th data-en="Submissions" data-ar="التقديمات" data-tr="Gönderiler">Submissions</th>
+                            <th data-en="Actions" data-ar="الإجراءات" data-tr="İşlemler">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <!-- Users will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Statistics -->
+            <div id="stats-section" class="admin-section">
+                <h2 data-en="Statistics" data-ar="الإحصائيات" data-tr="İstatistikler">Statistics</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3 data-en="Total Users" data-ar="إجمالي المستخدمين" data-tr="Toplam Kullanıcılar">Total Users</h3>
+                        <p class="stat-number" id="totalUsers">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 data-en="Pending Submissions" data-ar="التقديمات المعلقة" data-tr="Beklemede Gönderiler">Pending</h3>
+                        <p class="stat-number" id="totalPending">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 data-en="Approved" data-ar="الموافق عليها" data-tr="Onaylanan">Approved</h3>
+                        <p class="stat-number" id="totalApproved">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 data-en="Rejected" data-ar="المرفوضة" data-tr="Reddedilen">Rejected</h3>
+                        <p class="stat-number" id="totalRejected">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

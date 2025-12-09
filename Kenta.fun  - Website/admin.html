@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - KENTA</title>
+    <link rel="stylesheet" href="public/css/style.css">
+    <link rel="stylesheet" href="public/css/style-additional.css">
+    <script src="public/js/security.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #000000 0%, #0a0000 100%);
+            min-height: 100vh;
+        }
+    </style>
+    <script src="public/js/app.js"></script>
+</head>
+<body>
+    <div id="adminPanel" class="admin-panel active">
+        <div class="admin-header">
+            <h1 data-en="Admin Control Panel" data-ar="لوحة تحكم المسؤول" data-tr="Yönetici Kontrol Paneli">Admin Control Panel</h1>
+            <div>
+                <a href="index.html" class="logout-btn" style="text-decoration: none; display: inline-block; margin-right: 10px;" data-en="Back to Site" data-ar="العودة للموقع" data-tr="Siteye Dön">Back to Site</a>
+                <button class="logout-btn" onclick="logoutAdmin()" data-en="Logout" data-ar="تسجيل الخروج" data-tr="Çıkış Yap">Logout</button>
+            </div>
+        </div>
+        
+        <div class="admin-container">
+            <div class="admin-sidebar">
+                <ul class="admin-menu">
+                    <li><a href="#" onclick="showAdminSection('pending')" class="menu-active" data-en="Pending Submissions" data-ar="التقديمات المعلقة" data-tr="Beklemede Gönderiler">Pending Submissions</a></li>
+                    <li><a href="#" onclick="showAdminSection('approved')" data-en="Approved" data-ar="الموافق عليها" data-tr="Onaylanan">Approved</a></li>
+                    <li><a href="#" onclick="showAdminSection('rejected')" data-en="Rejected" data-ar="المرفوضة" data-tr="Reddedilen">Rejected</a></li>
+                    <li><a href="#" onclick="showAdminSection('users')" data-en="Users" data-ar="المستخدمون" data-tr="Kullanıcılar">Users</a></li>
+                    <li><a href="#" onclick="showAdminSection('stats')" data-en="Statistics" data-ar="الإحصائيات" data-tr="İstatistikler">Statistics</a></li>
+                </ul>
+            </div>
+
+            <div class="admin-content">
+                <!-- Pending Submissions -->
+                <div id="pending-section" class="admin-section active">
+                    <h2 data-en="Pending Product Submissions" data-ar="التقديمات المعلقة" data-tr="Beklemede Ürün Gönderileri">Pending Product Submissions</h2>
+                    <div id="pendingSubmissionsList" class="submissions-grid">
+                        <!-- Pending submissions will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Approved Submissions -->
+                <div id="approved-section" class="admin-section">
+                    <h2 data-en="Approved Products" data-ar="المنتجات الموافق عليها" data-tr="Onaylanan Ürünler">Approved Products</h2>
+                    <div id="approvedSubmissionsList" class="submissions-grid">
+                        <!-- Approved submissions will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Rejected Submissions -->
+                <div id="rejected-section" class="admin-section">
+                    <h2 data-en="Rejected Products" data-ar="المنتجات المرفوضة" data-tr="Reddedilen Ürünler">Rejected Products</h2>
+                    <div id="rejectedSubmissionsList" class="submissions-grid">
+                        <!-- Rejected submissions will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Users Management -->
+                <div id="users-section" class="admin-section">
+                    <h2 data-en="Users Management" data-ar="إدارة المستخدمين" data-tr="Kullanıcı Yönetimi">Users Management</h2>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th data-en="Username" data-ar="اسم المستخدم" data-tr="Kullanıcı Adı">Username</th>
+                                <th data-en="Email" data-ar="البريد الإلكتروني" data-tr="E-posta">Email</th>
+                                <th data-en="Join Date" data-ar="تاريخ الانضمام" data-tr="Katılma Tarihi">Join Date</th>
+                                <th data-en="Submissions" data-ar="التقديمات" data-tr="Gönderiler">Submissions</th>
+                                <th data-en="Actions" data-ar="الإجراءات" data-tr="İşlemler">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- Users will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Statistics -->
+                <div id="stats-section" class="admin-section">
+                    <h2 data-en="Statistics" data-ar="الإحصائيات" data-tr="İstatistikler">Statistics</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3 data-en="Total Users" data-ar="إجمالي المستخدمين" data-tr="Toplam Kullanıcılar">Total Users</h3>
+                            <p class="stat-number" id="totalUsers">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 data-en="Pending Submissions" data-ar="التقديمات المعلقة" data-tr="Beklemede Gönderiler">Pending</h3>
+                            <p class="stat-number" id="totalPending">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 data-en="Approved" data-ar="الموافق عليها" data-tr="Onaylanan">Approved</h3>
+                            <p class="stat-number" id="totalApproved">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 data-en="Rejected" data-ar="المرفوضة" data-tr="Reddedilen">Rejected</h3>
+                            <p class="stat-number" id="totalRejected">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize admin panel when page loads
+        window.addEventListener('load', function() {
+            const savedLanguage = localStorage.getItem('language') || 'en';
+            if (typeof setLanguage === 'function') {
+                setLanguage(savedLanguage);
+            }
+            
+            // Check if admin is logged in
+            const isAdmin = localStorage.getItem('adminLoggedIn') === 'true';
+            if (!isAdmin) {
+                // Try to show admin access modal
+                if (typeof generateAndShowAdminCode === 'function') {
+                    generateAndShowAdminCode();
+                } else {
+                    window.location.href = 'index.html';
+                }
+                return;
+            }
+            
+            if (typeof showAdminPanel === 'function') {
+                showAdminPanel();
+            } else {
+                loadAdminData();
+            }
+        });
+        
+        function logoutAdmin() {
+            if (confirm('Logout?')) {
+                localStorage.removeItem('adminLoggedIn');
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>
+
