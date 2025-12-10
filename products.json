@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "name": "7mnyst1 Tweaker",
+    "category": "tweaks",
+    "subcategory": "optimize",
+    "price": "$10",
+    "rating": 0,
+    "store": "7mnyst1",
+    "storeLink": "https://example.com",
+    "image": "public/images/kenta-logo.png"
+  },
+  {
+    "id": 2,
+    "name": "Fortnite Private",
+    "category": "cheats",
+    "subcategory": "external",
+    "price": "$8.00",
+    "rating": 0,
+    "store": "MN | Solution",
+    "storeLink": "https://mn-solution.sellhub.cx/product/fortnite-private/",
+    "image": "public/images/FortnitePrivate.png"
+  },
+  {
+    "id": 5,
+    "name": "Temporary Spoofer",
+    "category": "spoofers",
+    "subcategory": "temporary",
+    "price": "$30",
+    "rating": 4.9,
+    "store": "Sync.top",
+    "storeLink": "https://sync.top/",
+    "image": "public/images/Sync.top.png"
+  }
+]
